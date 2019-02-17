@@ -17,14 +17,14 @@ Aglomerativo [linkage, affinity, numberK]
 Otros       Void
 '''
 
-from modulesProject.clustering_analysis import processClustering
-from modulesProject.clustering_analysis import evaluationClustering
+from DMA_Kit_Modules.clustering_analysis import processClustering
+from DMA_Kit_Modules.clustering_analysis import evaluationClustering
 
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 import pandas as pd
 import json
@@ -32,14 +32,16 @@ import json
 class execAlgorithm(object):
 
     #constructor de la clase
-    def __init__(self, dataSet, user, job, pathResponse, algorithm, params, optionNormalize):
+    def __init__(self, dataSet, pathResponse, algorithm, params, optionNormalize):
 
         self.optionNormalize = optionNormalize
         self.processDataSet(dataSet)#hacemos el preprocesamiento a los datos
 
-        self.user = user
-        self.job = job
-        self.pathResponse = pathResponse
+        if pathResponse[-1] == "/":
+            self.pathResponse = pathResponse
+        else:
+            self.pathResponse= pathResponse+"/"
+
         self.algorithm = algorithm
         self.params = params#params es una lista de parametros asociados al algoritmo
         self.applyClustering = processClustering.aplicateClustering(self.dataSet)
@@ -102,6 +104,7 @@ class execAlgorithm(object):
 
         elif self.algorithm == 3:#Agglomerative
 
+
             responseExec = self.applyClustering.aplicateAlgomerativeClustering(self.params[0], self.params[1], int(self.params[2]))
             self.response.update({"algorithm": "Agglomerative Clustering"})
             paramsData = {}
@@ -153,22 +156,28 @@ class execAlgorithm(object):
 
         #solo si la ejecucion fue correcta!
         if self.response['responseExec'] == "OK":
+
+            print "Eval clustering"
             #evaluamos el clustering y obtenemos los resultados...
             result = evaluationClustering.evaluationClustering(self.dataSet, self.applyClustering.labels)#evaluamos...
             self.response.update({"calinski_harabaz_score": result.calinski})
             self.response.update({"silhouette_score": result.siluetas})
 
+            #print self.response
             #finalmente, agregamos los labels al set de datos y generamos el resultado en el path entregado...
             self.dataSet["Labels"] = pd.Series(self.applyClustering.labels, index=self.dataSet.index)
-            self.dataSet.to_csv(self.pathResponse+self.user+"/"+self.job+"/responseClustering.csv")
+            self.dataSet.to_csv(self.pathResponse+"responseClustering.csv")
 
+            print "Create file responseClustering.csv"
             #hacemos el conteo de los elementos por grupo para la generacion del grafico de torta asociada a la cantidad de grupos...
             self.response.update({"membersGroup":self.countMemberGroup()})
 
+        print self.response
         #exportamos tambien el resultado del json
-        with open(self.pathResponse+self.user+"/"+self.job+"/responseClustering.json", 'w') as fp:
+        with open(self.pathResponse+"responseClustering.json", 'w') as fp:
             json.dump(self.response, fp)
 
+        print "Create file responseClustering.json"
     #metodo que recibe una lista y genera un diccionario asociado a los grupos y su cantidad...
     def countMemberGroup(self):
 

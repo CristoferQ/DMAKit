@@ -13,15 +13,15 @@ directorio
 la implementacion de este servicio, es mas sencilla en comparacion a la del servicio de aprendizaje supervisado
 '''
 
-from modulesProject.clustering_analysis import processClustering
-from modulesProject.clustering_analysis import evaluationClustering
-from modulesProject.statistics_analysis import createHistogram
+from DMA_Kit_Modules.clustering_analysis import processClustering
+from DMA_Kit_Modules.clustering_analysis import evaluationClustering
+from DMA_Kit_Modules.statistics_analysis import createHistogram
 
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 import pandas as pd
 
