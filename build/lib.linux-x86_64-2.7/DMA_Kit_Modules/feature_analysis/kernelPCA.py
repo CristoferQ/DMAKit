@@ -4,19 +4,17 @@ import pandas as pd
 from sklearn.decomposition import KernelPCA
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 class kpca(object):
 
-	def __init__(self, user, job, dataSet, pathResponse, optionNormalize):
+	def __init__(self, dataSet, pathResponse, optionNormalize):
 
-		self.user = user
-		self.job = job
 		self.pathResponse = pathResponse
 		self.dataSet = dataSet
 		self.optionNormalize = optionNormalize
@@ -66,10 +64,10 @@ class kpca(object):
 			Y = transformer.fit_transform(X_or)
 
 				#CSV
-			file = "%s%s/%s/KernelPCA_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+			file = "%sKernelPCA.csv" % (self.pathResponse)
 
 			df = pd.DataFrame(Y)
-			df.to_csv(file)
+			df.to_csv(file, index=False)
 
 			okiedoki = "OK"
 

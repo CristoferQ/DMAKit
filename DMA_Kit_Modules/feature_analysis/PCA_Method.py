@@ -15,19 +15,16 @@ import pandas as pd
 from sklearn.decomposition import IncrementalPCA
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 class pca(object):
-	"""docstring for pca"""
 
-	def __init__(self, user, job, dataset, pathResponse, optionNormalize):
-		self.user = user
-		self.job = job
+	def __init__(self, dataset, pathResponse, optionNormalize):
 		self.pathResponse = pathResponse
 		self.dataset = dataset
 		self.optionNormalize = optionNormalize
@@ -65,7 +62,7 @@ class pca(object):
 		try:
 			X_or = self.normalizeDataSet()
 
-				#PCA
+			#PCA
 			X = stats.zscore(X_or, axis=0)
 			high, width = X.shape
 			V = np.cov(X.T)
@@ -89,11 +86,11 @@ class pca(object):
 			Y = X.dot(W)
 				#############################
 				#Archivos y cosas
-			file = "%s%s/%s/TransformedPCA_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
-			filePCT = "%s%s/%s/PCTPCA_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+			file = "%sTransformedPCA.csv" % (self.pathResponse)
+			filePCT = "%sPCTPCA.csv" % (self.pathResponse)
 
 			df = pd.DataFrame(Y)
-			df.to_csv(file)
+			df.to_csv(file, index=False)
 
 			dfPct= pd.DataFrame(P, columns=["Component", "Relevance"])
 			dfPct.to_csv(filePCT, index=False)
@@ -116,9 +113,9 @@ class pca(object):
 			Y = trans.fit_transform(X_or)
 
 			#CSV
-			file = "%s%s/%s/IncrementalPCA_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+			file = "%sIncrementalPCA.csv" % (self.pathResponse)
 			df = pd.DataFrame(Y)
-			df.to_csv(file)
+			df.to_csv(file, index=False)
 
 			#varianza explicada
 			explaindVariance = trans.explained_variance_ratio_
@@ -131,7 +128,7 @@ class pca(object):
 				matrix.append(row)
 				index+=1
 
-			fileExport = "%s%s/%s/varianzaExplained_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+			fileExport = "%svarianzaExplained.csv" % (self.pathResponse)
 			dfVar = pd.DataFrame(matrix, columns=["Component", "Variance"])
 			dfVar.to_csv(fileExport, index=False)
 

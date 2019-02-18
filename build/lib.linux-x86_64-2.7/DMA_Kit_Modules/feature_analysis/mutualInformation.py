@@ -16,23 +16,28 @@ MakeMatrix: construye una matriz completa con al informacion de MI de todas las 
 de las caracteristicas.
 Retorna: Matriz (caract x caract) con valor MI. La diagonal siempre es 1.
 '''
+
+import matplotlib
+matplotlib.use('Agg')
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 from sklearn.metrics import normalized_mutual_info_score as mis
 import numpy as np
 import pandas as pd
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 class mutualInformation(object):
 
-    def __init__(self, user, job, dataSet, pathResponse, optionNormalize):
-        self.user = user
-        self.job = job
+    def __init__(self, dataSet, pathResponse, optionNormalize):
+
         self.pathResponse = pathResponse
         self.dataSet = dataSet
         self.optionNormalize = optionNormalize
@@ -107,9 +112,20 @@ class mutualInformation(object):
                 j=0
 
             #CSV
-            file = "%s%s/%s/MatrixMI_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+            file = "%sMatrixMI.csv" % (self.pathResponse)
             df = pd.DataFrame(W, index=columnas, columns=columnas)
             df.to_csv(file)
+
+            #generamos la imagen
+            plt.figure()
+            heatmap = sns.heatmap(df)
+
+            loc, labels = plt.xticks()
+            heatmap.set_xticklabels(labels)
+            heatmap.set_yticklabels(labels[::-1])
+            nameFileImage = "%smutualInformationMatrix.svg" % (self.pathResponse)
+            plt.savefig(nameFileImage)
+
             okiedoki = "OK"
 
         except Exception as e:

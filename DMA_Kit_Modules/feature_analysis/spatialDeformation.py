@@ -9,19 +9,17 @@ import pandas as pd
 import numpy as np
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 class spatialDeformation(object):
 
-    def __init__(self, user, job, dataSet, pathResponse, optionNormalize):
+    def __init__(self, dataSet, pathResponse, optionNormalize):
 
-        self.user = user
-        self.job = job
         self.dataSet = dataSet
         self.pathResponse = pathResponse
         self.optionNormalize = optionNormalize
@@ -68,7 +66,7 @@ class spatialDeformation(object):
             importances = importances.sort('importance',ascending=False).set_index('feature')
 
             #exportamos el resultado
-            nameCSV = "%s%s/%s/rankingImportance_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+            nameCSV = "%srankingImportance.csv" % (self.pathResponse)
             importances.to_csv(nameCSV)
             response = "OK"
         except:
@@ -90,7 +88,7 @@ class spatialDeformation(object):
             importances = importances.sort('importance',ascending=False).set_index('feature')
 
                 #exportamos el resultado
-            nameCSV = "%s%s/%s/rankingImportance_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+            nameCSV = "%srankingImportance.csv" % (self.pathResponse)
             importances.to_csv(nameCSV)
             response = "OK"
         except:
@@ -119,26 +117,29 @@ class spatialDeformation(object):
     #metodo que permite aplicar la deformacion de espacio...
     def applySpatialDeformation(self, feature, kindDataSet):
 
-        if kindDataSet == 'CLASS':
-            data, target = self.getClass_Attribute(self.dataSet, feature)
+        try:
+            if kindDataSet == 'CLASS':
+                data, target = self.getClass_Attribute(self.dataSet, feature)
 
-            #normalizo el set de datos...
-            dataNorm = self.normalizeDataSet(data)
+                #normalizo el set de datos...
+                dataNorm = self.normalizeDataSet(data)
 
-            #transformamos las clases en variables numericas si es necesario...
-            transformData = transformDataClass.transformClass(target)
-            targetTransform = transformData.transformData
+                #transformamos las clases en variables numericas si es necesario...
+                transformData = transformDataClass.transformClass(target)
+                targetTransform = transformData.transformData
 
-            response = self.applyRandomForestClassifier(dataNorm, targetTransform)
+                response = self.applyRandomForestClassifier(dataNorm, targetTransform)
 
-        elif kindDataSet == 'PREDICTION':
-            data, response = self.getClass_Attribute(self.dataSet, feature)
+            elif kindDataSet == 'PREDICTION':
+                data, response = self.getClass_Attribute(self.dataSet, feature)
 
-            #normalizamos el set de datos...
-            dataNorm = self.normalizeDataSet(data)
-            response = self.applyRandomForestPrediction(dataNorm, response)
+                #normalizamos el set de datos...
+                dataNorm = self.normalizeDataSet(data)
+                response = self.applyRandomForestPrediction(dataNorm, response)
 
-        else:
-            response = "Option not available for this type of data set"
-
+            else:
+                response = "Option not available for this type of data set"
+        except:
+            response = "ERROR"
+            pass
         return response

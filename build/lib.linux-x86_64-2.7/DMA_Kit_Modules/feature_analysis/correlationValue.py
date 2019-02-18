@@ -11,19 +11,17 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 class correlationMatrixData(object):
 
-    def __init__(self, user, job, dataSet, pathResponse, optionNormalize):
+    def __init__(self, dataSet, pathResponse, optionNormalize):
 
-        self.user = user
-        self.job = job
         self.dataSet = dataSet
         self.pathResponse = pathResponse
         self.optionNormalize = optionNormalize
@@ -68,7 +66,7 @@ class correlationMatrixData(object):
             correlationMatrix = data.corr()
 
             #exportamos el archivo...
-            nameFile = "%s%s/%s/correlationMatrix_%s.csv" % (self.pathResponse, self.user, self.job, self.job)
+            nameFile = "%scorrelationMatrix.csv" % (self.pathResponse)
             correlationMatrix.to_csv(nameFile)
 
             #generamos la imagen
@@ -78,7 +76,7 @@ class correlationMatrixData(object):
             loc, labels = plt.xticks()
             heatmap.set_xticklabels(labels)
             heatmap.set_yticklabels(labels[::-1])
-            nameFileImage = "%s%s/%s/correlationMatrix_%s.svg" % (self.pathResponse, self.user, self.job, self.job)
+            nameFileImage = "%scorrelationMatrix.svg" % (self.pathResponse)
             plt.savefig(nameFileImage)
 
             response = "OK"
