@@ -24,7 +24,7 @@ class aplicateClustering(object):
             pass
             return 1
 
-    #metodo que permite aplicar bisrch clustering
+    #metodo que permite aplicar birch clustering
     def aplicateBirch(self, numberK):
 
         try:

@@ -19,6 +19,7 @@ Otros       Void
 
 from DMA_Kit_Modules.clustering_analysis import processClustering
 from DMA_Kit_Modules.clustering_analysis import evaluationClustering
+from DMA_Kit_Modules.graphic import createCharts
 
 from DMA_Kit_Modules.utils import transformFrequence
 from DMA_Kit_Modules.utils import ScaleNormalScore
@@ -170,7 +171,13 @@ class execAlgorithm(object):
 
             print "Create file responseClustering.csv"
             #hacemos el conteo de los elementos por grupo para la generacion del grafico de torta asociada a la cantidad de grupos...
-            self.response.update({"membersGroup":self.countMemberGroup()})
+            countGroup, keys, values = self.countMemberGroup()
+            self.response.update({"membersGroup":countGroup})
+
+            #hacemos la instancia para generar el grafico
+            namePic = self.pathResponse+"distributionGroup.png"
+            createChartsObject = createCharts.graphicsCreator()
+            createChartsObject.createPieChart(keys, values, namePic)
 
         print self.response
         #exportamos tambien el resultado del json
@@ -178,8 +185,12 @@ class execAlgorithm(object):
             json.dump(self.response, fp)
 
         print "Create file responseClustering.json"
+
     #metodo que recibe una lista y genera un diccionario asociado a los grupos y su cantidad...
     def countMemberGroup(self):
+
+        keys = []
+        values = []
 
         groups = list(set(self.applyClustering.labels))
 
@@ -192,5 +203,7 @@ class execAlgorithm(object):
                 if element == label:
                     cont+=1
             key = "Group"+str(element)
+            keys.append(key)
+            values.append(cont)
             countGroup.update({key: cont})
-        return countGroup
+        return countGroup, keys, values
