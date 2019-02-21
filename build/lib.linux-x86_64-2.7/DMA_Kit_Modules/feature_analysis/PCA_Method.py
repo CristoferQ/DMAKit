@@ -22,6 +22,8 @@ from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
+from DMA_Kit_Modules.graphic import createCharts
+
 class pca(object):
 
 	def __init__(self, dataset, pathResponse, optionNormalize):
@@ -84,8 +86,8 @@ class pca(object):
 				aux+=1
 
 			Y = X.dot(W)
-				#############################
-				#Archivos y cosas
+					#############################
+					#Archivos y cosas
 			file = "%sTransformedPCA.csv" % (self.pathResponse)
 			filePCT = "%sPCTPCA.csv" % (self.pathResponse)
 
@@ -94,6 +96,15 @@ class pca(object):
 
 			dfPct= pd.DataFrame(P, columns=["Component", "Relevance"])
 			dfPct.to_csv(filePCT, index=False)
+
+			#generamos el grafico de las relevancias
+			keys = dfPct['Component']
+			values = dfPct['Relevance']
+			namePicture = self.pathResponse+"RelevanceRanking_PCA.png"
+
+			#instanciamos un objeto del tipo graph
+			graph = createCharts.graphicsCreator()
+			graph.createBarChart(keys, values, 'Component', 'Relevance (%)', 'Ranking Relevance Components', namePicture)
 
 			okidokie = "OK"
 		except Exception as e:
@@ -131,6 +142,16 @@ class pca(object):
 			fileExport = "%svarianzaExplained.csv" % (self.pathResponse)
 			dfVar = pd.DataFrame(matrix, columns=["Component", "Variance"])
 			dfVar.to_csv(fileExport, index=False)
+
+			#generamos el grafico de las relevancias
+			keys = dfVar['Component']
+			values = dfVar['Variance']
+			namePicture = self.pathResponse+"RelevanceRanking_IPCA.png"
+
+			#instanciamos un objeto del tipo graph
+			graph = createCharts.graphicsCreator()
+			graph.createBarChart(keys, values, 'Component', 'Relevance (%)', 'Ranking Relevance Components', namePicture)
+
 
 			okidokie = "OK"
 

@@ -15,6 +15,7 @@ from DMA_Kit_Modules.utils import ScaleNormalScore
 from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.graphic import createCharts
 
 class spatialDeformation(object):
 
@@ -63,11 +64,24 @@ class spatialDeformation(object):
 
             #obtenemos las importancias
             importances = pd.DataFrame({'feature':data.columns.tolist(),'importance':np.round(random_forest.feature_importances_,3)})
-            importances = importances.sort('importance',ascending=False).set_index('feature')
+            importances = importances.sort_values('importance',ascending=False).set_index('feature')
 
             #exportamos el resultado
             nameCSV = "%srankingImportance.csv" % (self.pathResponse)
             importances.to_csv(nameCSV)
+
+            #generamos el grafico de las relevancias
+            dataP = pd.read_csv(nameCSV)
+            keys = dataP['feature']
+            values = dataP['importance']
+            for i in range(len(values)):
+                values[i] = values[i]*100
+
+            namePicture = self.pathResponse+"RelevanceRanking_SpatialCLF.png"
+            #instanciamos un objeto del tipo graph
+            graph = createCharts.graphicsCreator()
+            graph.createBarChart(keys, values, 'Component', 'Relevance (%)', 'Ranking Relevance Components', namePicture)
+
             response = "OK"
         except:
             response = "ERROR"
@@ -83,13 +97,26 @@ class spatialDeformation(object):
             random_forest = RandomForestRegressor(max_depth=2, random_state=0, n_estimators=10, n_jobs=-1, criterion='mse')
             random_forest = random_forest.fit(data, target)
 
-                #obtenemos las importancias
+            #obtenemos las importancias
             importances = pd.DataFrame({'feature':data.columns.tolist(),'importance':np.round(random_forest.feature_importances_,3)})
-            importances = importances.sort('importance',ascending=False).set_index('feature')
+            importances = importances.sort_values('importance',ascending=False).set_index('feature')
 
-                #exportamos el resultado
+            #exportamos el resultado
             nameCSV = "%srankingImportance.csv" % (self.pathResponse)
             importances.to_csv(nameCSV)
+
+            #generamos el grafico de las relevancias
+            dataP = pd.read_csv(nameCSV)
+            keys = dataP['feature']
+            values = dataP['importance']
+            for i in range(len(values)):
+                values[i] = values[i]*100
+            namePicture = self.pathResponse+"RelevanceRanking_SpatialPRD.png"
+
+            #instanciamos un objeto del tipo graph
+            graph = createCharts.graphicsCreator()
+            graph.createBarChart(keys, values, 'Component', 'Relevance (%)', 'Ranking Relevance Components', namePicture)
+
             response = "OK"
         except:
             response = "ERROR"
@@ -117,29 +144,29 @@ class spatialDeformation(object):
     #metodo que permite aplicar la deformacion de espacio...
     def applySpatialDeformation(self, feature, kindDataSet):
 
-        try:
-            if kindDataSet == 'CLASS':
-                data, target = self.getClass_Attribute(self.dataSet, feature)
+        #try:
+        if kindDataSet == 'CLASS':
+            data, target = self.getClass_Attribute(self.dataSet, feature)
 
-                #normalizo el set de datos...
-                dataNorm = self.normalizeDataSet(data)
+            #normalizo el set de datos...
+            dataNorm = self.normalizeDataSet(data)
 
-                #transformamos las clases en variables numericas si es necesario...
-                transformData = transformDataClass.transformClass(target)
-                targetTransform = transformData.transformData
+            #transformamos las clases en variables numericas si es necesario...
+            transformData = transformDataClass.transformClass(target)
+            targetTransform = transformData.transformData
 
-                response = self.applyRandomForestClassifier(dataNorm, targetTransform)
+            response = self.applyRandomForestClassifier(dataNorm, targetTransform)
 
-            elif kindDataSet == 'PREDICTION':
-                data, response = self.getClass_Attribute(self.dataSet, feature)
+        elif kindDataSet == 'PREDICTION':
+            data, response = self.getClass_Attribute(self.dataSet, feature)
 
-                #normalizamos el set de datos...
-                dataNorm = self.normalizeDataSet(data)
-                response = self.applyRandomForestPrediction(dataNorm, response)
+            #normalizamos el set de datos...
+            dataNorm = self.normalizeDataSet(data)
+            response = self.applyRandomForestPrediction(dataNorm, response)
 
-            else:
-                response = "Option not available for this type of data set"
-        except:
-            response = "ERROR"
-            pass
+        else:
+            response = "Option not available for this type of data set"
+        #except:
+        #    response = "ERROR"
+        #    pass
         return response
