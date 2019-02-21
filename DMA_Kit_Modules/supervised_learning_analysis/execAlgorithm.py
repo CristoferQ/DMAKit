@@ -21,31 +21,29 @@ Cada uno posee diferentes parametros con respecto a su ejecucion...
 '''
 
 #importamos los algoritmos...
-from modulesProject.supervised_learning_analysis import AdaBoost
-from modulesProject.supervised_learning_analysis import Baggin
-from modulesProject.supervised_learning_analysis import BernoulliNB
-from modulesProject.supervised_learning_analysis import DecisionTree
-from modulesProject.supervised_learning_analysis import GaussianNB
-from modulesProject.supervised_learning_analysis import Gradient
-from modulesProject.supervised_learning_analysis import knn
-from modulesProject.supervised_learning_analysis import MLP
-from modulesProject.supervised_learning_analysis import NuSVM
-from modulesProject.supervised_learning_analysis import RandomForest
-from modulesProject.supervised_learning_analysis import SVM
+from DMA_Kit_Modules.supervised_learning_analysis import AdaBoost
+from DMA_Kit_Modules.supervised_learning_analysis import Baggin
+from DMA_Kit_Modules.supervised_learning_analysis import BernoulliNB
+from DMA_Kit_Modules.supervised_learning_analysis import DecisionTree
+from DMA_Kit_Modules.supervised_learning_analysis import GaussianNB
+from DMA_Kit_Modules.supervised_learning_analysis import Gradient
+from DMA_Kit_Modules.supervised_learning_analysis import knn
+from DMA_Kit_Modules.supervised_learning_analysis import MLP
+from DMA_Kit_Modules.supervised_learning_analysis import NuSVM
+from DMA_Kit_Modules.supervised_learning_analysis import RandomForest
+from DMA_Kit_Modules.supervised_learning_analysis import SVM
 
 #importamos los metodos para generar el resto de los resultados
-from modulesProject.supervised_learning_analysis import createConfusionMatrix
-from modulesProject.supervised_learning_analysis import createLearningCurve
-from modulesProject.supervised_learning_analysis import createPrecisionRecallCurve
-from modulesProject.supervised_learning_analysis import createRocCurve
+from DMA_Kit_Modules.supervised_learning_analysis import createConfusionMatrix
+from DMA_Kit_Modules.supervised_learning_analysis import createLearningCurve
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 import pandas as pd
 import json
@@ -53,11 +51,9 @@ import json
 class execAlgorithm(object):
 
     #constructor de la clase
-    def __init__(self, dataSet, user, job, pathResponse, algorithm, params, validation, featureClass, optionNormalize):
+    def __init__(self, dataSet, pathResponse, algorithm, params, validation, featureClass, optionNormalize):
 
         self.dataSet = dataSet
-        self.user = user
-        self.job = job
         self.pathResponse = pathResponse
         self.algorithm = algorithm
         self.params = params#params es una lista de parametros asociados al algoritmo
@@ -158,7 +154,7 @@ class execAlgorithm(object):
             #trabajamos con la matriz de confusion
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, AdaBoostObject.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, AdaBoostObject.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -168,7 +164,7 @@ class execAlgorithm(object):
 
             try:
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, AdaBoostObject.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, AdaBoostObject.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -178,9 +174,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 2:#Bagging
@@ -209,7 +204,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print bagginObject.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -218,7 +212,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, bagginObject.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, bagginObject.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -227,7 +221,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, bagginObject.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, bagginObject.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -238,9 +232,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 3:#Bernoulli
@@ -267,7 +260,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print bernoulliNB.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -276,7 +268,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, bernoulliNB.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, bernoulliNB.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -285,7 +277,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, bernoulliNB.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, bernoulliNB.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -296,9 +288,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 4:#DecisionTree
@@ -327,7 +318,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print decisionTreeObject.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -336,7 +326,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, decisionTreeObject.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, decisionTreeObject.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -345,7 +335,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, decisionTreeObject.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, decisionTreeObject.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -356,9 +346,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 5:#Gaussian
@@ -386,7 +375,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print gaussianObject.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -395,7 +383,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, gaussianObject.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, gaussianObject.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -404,7 +392,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, gaussianObject.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, gaussianObject.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -415,9 +403,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 6:#Gradient
@@ -450,7 +437,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print gradientObject.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -459,7 +445,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, gradientObject.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, gradientObject.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -468,7 +454,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, gradientObject.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, gradientObject.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -479,9 +465,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 7:#KNN
@@ -512,7 +497,6 @@ class execAlgorithm(object):
                 performance.update({"f1": knnObect.performanceData.scoreData[6]})
                 self.response.update({"Performance": performance})
 
-                print knnObect.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -522,7 +506,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, knnObect.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, knnObect.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -531,7 +515,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, knnObect.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, knnObect.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -542,9 +526,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 8:#MLP
@@ -581,7 +564,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print MLPObject.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -590,7 +572,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, MLPObject.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, MLPObject.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -599,7 +581,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, MLPObject.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, MLPObject.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -610,9 +592,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 9:#NuSVC
@@ -645,7 +626,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print nuSVM.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -654,7 +634,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, nuSVM.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, nuSVM.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -663,7 +643,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, nuSVM.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, nuSVM.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -674,9 +654,8 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
         elif self.algorithm == 10:#RandomForest
@@ -709,7 +688,6 @@ class execAlgorithm(object):
 
                 self.response.update({"Performance": performance})
 
-                print rf.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -718,7 +696,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, rf.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, rf.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -727,7 +705,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, rf.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, rf.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -738,12 +716,11 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)
 
-        elif self.algorithm == 11:#SVC
+        else:#SVC
 
             self.response.update({"algorithm": "SVC"})
             paramsData = {}
@@ -771,7 +748,6 @@ class execAlgorithm(object):
                 performance.update({"f1": svm.performanceData.scoreData[6]})
                 self.response.update({"Performance": performance})
 
-                print svm.performanceData.scoreData
                 errorData.update({"exec_algorithm": "OK"})
             except:
                 errorData.update({"exec_algorithm": "ERROR"})
@@ -780,7 +756,7 @@ class execAlgorithm(object):
             try:
 
                 #learning curve
-                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, svm.model, self.validation, self.user, self.job, self.pathResponse)
+                learningCurveDemo = createLearningCurve.curveLearning(self.data, self.target, svm.model, self.validation, self.pathResponse)
                 learningCurveDemo.createLearningCurve()
                 errorData.update({"curveLearning" : "ok"})
             except:
@@ -789,7 +765,7 @@ class execAlgorithm(object):
 
             try:
                 #confusion matrix data
-                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, svm.model, self.validation, self.user, self.job, self.pathResponse, self.classArray)
+                confusionMatrixDemo = createConfusionMatrix.confusionMatrix(self.data, self.target, svm.model, self.validation, self.pathResponse, self.classArray)
                 responseMatrix = confusionMatrixDemo.createConfusionMatrix(self.dictTransform)
                 self.response.update({"matrixConfusionResponse":responseMatrix})
                 errorData.update({"confusionMatrix" : "ok"})
@@ -800,7 +776,6 @@ class execAlgorithm(object):
             self.response.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            print nameFile
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.response, fp)

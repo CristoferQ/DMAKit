@@ -11,22 +11,23 @@ from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import confusion_matrix
+
+from DMA_Kit_Modules.graphic import createCharts
+
 import itertools
 import pandas as pd
 import json
 
 class confusionMatrix(object):
 
-    def __init__(self, dataSet, target, modelData, cv_values, user, job, path, classList):
+    def __init__(self, dataSet, target, modelData, cv_values, path, classList):
 
         self.dataSet = dataSet
         self.target = target
         self.modelData = modelData
-        self.job = job
         self.path = path
-        self.user = user
         self.classList = classList
-        self.pathResponse = self.path+self.user+"/"+self.job+"/confusionMatrix_"+self.job
+        self.pathResponse = self.path+"confusionMatrix"
 
         if cv_values == -1:
             self.cv_values = LeaveOneOut()
@@ -37,7 +38,6 @@ class confusionMatrix(object):
     #metodo que permite exportar la matriz a un csv y adiciona las filas y columnas correspondientes a fiabilidad y bakanosidad
     def exportConfusionMatrix(self, matrix, dictTransform):
 
-        print dictTransform
         #calculamos la bakanosidad del modelo (en base a los valores de la primera columna)
         bakanosidad = []
         for i in range(len(matrix)):
@@ -61,16 +61,16 @@ class confusionMatrix(object):
         matrixData = []
         for element in matrix:#obtenemos las columnas
             rowSum = sum(element)
-            print rowSum
             row = []
             for value in element:
-                print value
                 dataInValue = (value/float(rowSum))*100
-                print dataInValue
                 row.append(dataInValue)
             matrixData.append(row)
-        print matrixData
         dictResponse = {"fiabilidad": fiabilidad, "bakanosidad":bakanosidad, "matrix":matrixData, "header": header}
+        #generamos el grafico de barras comparativas entre estas medidas
+        graph = createCharts.graphicsCreator()
+
+        graph.createBarChartCompare(fiabilidad, bakanosidad, 'fiabilidad', 'bakanosidad', 'Medidas Raras', 'Percentage', self.target, self.path+"barchartCompare.png")
 
         return dictResponse
 
@@ -89,8 +89,11 @@ class confusionMatrix(object):
 
         self.predictions = cross_val_predict(self.modelData, self.dataSet, self.target, cv=self.cv_values)
         matrix = confusion_matrix(self.target, self.predictions)
-        print matrix
         dictResponse = self.exportConfusionMatrix(matrix, dictTransform)
+        graph = createCharts.graphicsCreator()
+
+        graph.createConfusionMatrixPictures(matrix, self.target, self.path+"confusionMatrix.svg")
+
         return dictResponse
 
         # Plot non-normalized confusion matrix
