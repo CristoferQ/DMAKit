@@ -32,7 +32,7 @@ if (processData.validatePath(args.pathResult) == 0):
     if (processData.validateDataSetExist(args.dataSet) == 0):
 
         dataSet = args.dataSet
-        option = args.option
+        option = int(args.option)
         pathResult = args.pathResult
         algorithm = int(args.algorithm)
 

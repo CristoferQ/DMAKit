@@ -88,3 +88,15 @@ class graphicsCreator(object):
         plt.title("Confusion Matrix for training model")
 
         plt.savefig(namePicture)
+
+    #metodo que permite crearel grafico de scatter plot
+    def createScatterPlotErrorPrediction(self, real_values, predict_values, namePicture):
+
+        df=pd.DataFrame({'x': real_values, 'y': predict_values})
+
+        # plot with matplotlib
+        plt.plot( 'x', 'y', data=df, marker='o', linestyle='none', color='mediumvioletred')
+        plt.xlabel("Real Values", fontweight='bold')
+        plt.ylabel("Predict Values", fontweight='bold')
+        plt.title("Scatter Plot Real v/s Predict Values")
+        plt.savefig(namePicture)

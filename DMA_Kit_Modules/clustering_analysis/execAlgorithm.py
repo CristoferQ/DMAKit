@@ -60,15 +60,15 @@ class execAlgorithm(object):
             applyNormal = ScaleNormalScore.applyNormalScale(dataSetNewFreq)
             self.dataSet = applyNormal.dataTransform
 
-        if self.optionNormalize == 2:#min max scaler
+        elif self.optionNormalize == 2:#min max scaler
             applyMinMax = ScaleMinMax.applyMinMaxScaler(dataSetNewFreq)
             self.dataSet = applyMinMax.dataTransform
 
-        if self.optionNormalize == 3:#log scale
+        elif self.optionNormalize == 3:#log scale
             applyLog = ScaleDataSetLog.applyLogScale(dataSetNewFreq)
             self.dataSet = applyLog.dataTransform
 
-        if self.optionNormalize == 4:#log normal scale
+        else:#log normal scale
             applyLogNormal = ScaleLogNormalScore.applyLogNormalScale(dataSetNewFreq)
             self.dataSet = applyLogNormal.dataTransform
 

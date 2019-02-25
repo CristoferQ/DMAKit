@@ -14,24 +14,25 @@ Orden de los algoritmos
 9. SVR
 '''
 
-from modulesProject.supervised_learning_predicction import AdaBoost
-from modulesProject.supervised_learning_predicction import Baggin
-from modulesProject.supervised_learning_predicction import DecisionTree
-from modulesProject.supervised_learning_predicction import Gradient
-from modulesProject.supervised_learning_predicction import knn_regression
-from modulesProject.supervised_learning_predicction import MLP
-from modulesProject.supervised_learning_predicction import NuSVR
-from modulesProject.supervised_learning_predicction import RandomForest
-from modulesProject.supervised_learning_predicction import SVR
+from DMA_Kit_Modules.supervised_learning_predicction import AdaBoost
+from DMA_Kit_Modules.supervised_learning_predicction import Baggin
+from DMA_Kit_Modules.supervised_learning_predicction import DecisionTree
+from DMA_Kit_Modules.supervised_learning_predicction import Gradient
+from DMA_Kit_Modules.supervised_learning_predicction import knn_regression
+from DMA_Kit_Modules.supervised_learning_predicction import MLP
+from DMA_Kit_Modules.supervised_learning_predicction import NuSVR
+from DMA_Kit_Modules.supervised_learning_predicction import RandomForest
+from DMA_Kit_Modules.supervised_learning_predicction import SVR
 
 #metodos de la libreria utils...
-from modulesProject.utils import transformDataClass
-from modulesProject.utils import transformFrequence
-from modulesProject.utils import ScaleNormalScore
-from modulesProject.utils import ScaleMinMax
-from modulesProject.utils import ScaleDataSetLog
-from modulesProject.utils import ScaleLogNormalScore
-from modulesProject.supervised_learning_predicction import performanceData
+from DMA_Kit_Modules.utils import transformDataClass
+from DMA_Kit_Modules.utils import transformFrequence
+from DMA_Kit_Modules.utils import ScaleNormalScore
+from DMA_Kit_Modules.utils import ScaleMinMax
+from DMA_Kit_Modules.utils import ScaleDataSetLog
+from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.supervised_learning_predicction import performanceData
+from DMA_Kit_Modules.graphic import createCharts
 
 import pandas as pd
 import json
@@ -39,11 +40,9 @@ import json
 class execAlgorithm(object):
 
     #constructor de la clase
-    def __init__(self, dataSet, user, job, pathResponse, algorithm, params, featureClass, optionNormalize):
+    def __init__(self, dataSet, pathResponse, algorithm, params, featureClass, optionNormalize):
 
         self.dataSet = dataSet
-        self.user = user
-        self.job = job
         self.pathResponse = pathResponse
         self.algorithm = algorithm
         self.featureClass = featureClass
@@ -91,7 +90,7 @@ class execAlgorithm(object):
             applyLog = ScaleDataSetLog.applyLogScale(dataSetNewFreq)
             self.data = applyLog.dataTransform
 
-        if self.optionNormalize == 4:#log normal scale
+        else:#log normal scale
             applyLogNormal = ScaleLogNormalScore.applyLogNormalScale(dataSetNewFreq)
             self.data = applyLogNormal.dataTransform
 
@@ -117,19 +116,24 @@ class execAlgorithm(object):
                 performance.update({"predict_values": AdaBoostObject.predicctions.tolist()})
                 performance.update({"real_values": AdaBoostObject.response.tolist()})
 
-                #calculamos las medidas asociadas a la data de interes...
+                    #calculamos las medidas asociadas a la data de interes...
                 performanceValues = performanceData.performancePrediction(self.response, AdaBoostObject.predicctions.tolist())
                 pearsonValue = performanceValues.calculatedPearson()
                 spearmanValue = performanceValues.calculatedSpearman()
                 kendalltauValue = performanceValues.calculatekendalltau()
 
-                #los agregamos al diccionario
+                    #los agregamos al diccionario
                 performance.update({"pearson":pearsonValue})
                 performance.update({"spearman":spearmanValue})
                 performance.update({"kendalltau":kendalltauValue})
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                    #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(AdaBoostObject.response.tolist(), AdaBoostObject.predicctions.tolist(), namePicture)
+
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -137,8 +141,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 2:#Bagging
@@ -173,6 +177,11 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(baggingObject.response.tolist(), baggingObject.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -180,8 +189,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 3:#DecisionTree
@@ -216,6 +225,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(decisionObject.response.tolist(), decisionObject.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -223,8 +236,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 4:#Gradient
@@ -262,6 +275,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(gradientObject.response.tolist(), gradientObject.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -269,8 +286,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 5:#KNN
@@ -307,6 +324,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(knnObject.response.tolist(), knnObject.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -314,8 +335,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 6:#MLP
@@ -357,6 +378,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(MLPObject.response.tolist(), MLPObject.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -364,8 +389,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 7:#NuSVR
@@ -402,6 +427,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(nuSVM.response.tolist(), nuSVM.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -409,8 +438,8 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
         elif self.algorithm == 8:#RandomForest
@@ -448,6 +477,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(rf.response.tolist(), rf.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -455,11 +488,11 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
 
-        elif self.algorithm == 9:#SVR
+        else:#SVR
 
             errorData = {}
             self.responseExec.update({"algorithm": "SVR"})
@@ -492,6 +525,10 @@ class execAlgorithm(object):
 
                 self.responseExec.update({"Performance": performance})
                 errorData.update({"Process" : "OK"})
+                #instancia a graphic para crear scatter plot
+                graphic =createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"scatter.png"
+                graphic.createScatterPlotErrorPrediction(svm.response.tolist(), svm.predicctions.tolist(), namePicture)
             except:
                 errorData.update({"Process" : "ERROR"})
                 pass
@@ -499,6 +536,6 @@ class execAlgorithm(object):
             self.responseExec.update({"errorExec": errorData})
 
             #exportamos tambien el resultado del json
-            nameFile =self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json"
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseTraining"+str(self.job)+".json", 'w') as fp:
+            nameFile =self.pathResponse+"responseTraining.json"
+            with open(self.pathResponse+"responseTraining.json", 'w') as fp:
                 json.dump(self.responseExec, fp)
