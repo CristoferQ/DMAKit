@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from pandas.tools.plotting import parallel_coordinates
 
 class graphicsCreator(object):
 
@@ -66,7 +67,6 @@ class graphicsCreator(object):
         plt.legend()
         plt.savefig(namePicture)
 
-
     #metodo que permite crear el grafico de la matriz de confusion asociada al proceso de entrenamiento de modelos
     def createConfusionMatrixPictures(self, matrixData, listData, namePicture):
 
@@ -89,7 +89,7 @@ class graphicsCreator(object):
 
         plt.savefig(namePicture)
 
-    #metodo que permite crearel grafico de scatter plot
+    #metodo que permite crear el grafico de scatter plot
     def createScatterPlotErrorPrediction(self, real_values, predict_values, namePicture):
 
         df=pd.DataFrame({'x': real_values, 'y': predict_values})
@@ -99,4 +99,56 @@ class graphicsCreator(object):
         plt.xlabel("Real Values", fontweight='bold')
         plt.ylabel("Predict Values", fontweight='bold')
         plt.title("Scatter Plot Real v/s Predict Values")
+        plt.savefig(namePicture)
+
+    #metodo que permite crear el grafico de la visual continua
+    def createScatterContinueData(self, data, namePicture, key):
+
+        df=pd.DataFrame({'x': data})
+
+        # plot with matplotlib
+        plt.plot( 'x', data=df, marker='o', linestyle='none', color='mediumvioletred')
+        plt.xlabel("Values in "+key, fontweight='bold')
+        plt.title("View values for "+key)
+        plt.savefig(namePicture)
+
+    #metodo que permite crear el boxplot
+    def createBoxPlot(self, dataValues, namePicture):
+        plt.figure()
+        sns.boxplot(data=dataValues)
+        plt.title("Box Plot")
+        plt.savefig(namePicture)
+
+    #metodo que permite crear el boxplot
+    def createViolinPlot(self, dataValues, namePicture):
+
+        plt.figure()
+        sns.violinplot(data=dataValues)
+        plt.title("Violin Plot")
+        plt.savefig(namePicture)
+
+    #funcion que permite crear un histograma...
+    def generateHistogram(self, dataSet, key, exportName, title):
+
+        plt.figure()
+        sns.set(color_codes=True)
+        sns.set(style="ticks")
+        sns_plot = sns.distplot(dataSet[key] , color="olive", label=key, kde=False, rug=True)
+        sns.plt.legend()
+        sns.plt.title(title)
+        sns_plot.figure.savefig(exportName)
+
+    #funcion que permite crear un parallel coordinates
+    def createParallelCoordinates(self, dataSet, key, namePicture, title):
+
+        plt.figure()
+        parallel_coordinates(dataSet, key, colormap=plt.get_cmap("Set2"))
+        plt.title(title)
+        plt.savefig(namePicture)
+
+    #funcion que permite crear un scatter plot matrix
+    def createScatterPlotMatrix(self, dataSet, namePicture, key):
+
+        plt.figure()
+        sns.pairplot(dataSet, kind="scatter", hue=key, palette="Set2")
         plt.savefig(namePicture)

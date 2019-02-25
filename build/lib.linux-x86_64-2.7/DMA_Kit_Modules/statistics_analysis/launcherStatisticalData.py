@@ -11,92 +11,131 @@ En general, el proceso consta de:
 5. Cambiar status de job con respecto a la ejecucion del proceso
 
 '''
-from modulesProject.statistics_analysis import getFeatures
-from modulesProject.statistics_analysis import getDataByType
-from modulesProject.statistics_analysis import processStatiticsSummary
+from DMA_Kit_Modules.statistics_analysis import processStatiticsSummary
+from DMA_Kit_Modules.graphic import createCharts
 
 import json
 import pandas as pd
+import numpy as np
 
 #definicion de la clase
 class launcherStatisticalProcess(object):
 
-    def __init__(self, user, job, dataSet, idDataSet, pathResponse, optionProcess):
+    def __init__(self, dataSet, pathResponse, optionProcess, keyFeature):
 
-        self.user = user
-        self.job = job
         self.dataSet = dataSet
-        self.idDataSet = idDataSet
         self.pathResponse = pathResponse
         self.optionProcess = int(optionProcess)#el metodo a ejecutar...
-
-        #process feature...
-        self.handlerFeature = getFeatures.processFeatureInDataSet(self.dataSet, self.idDataSet)
-        self.handlerFeature.processDataValues()
+        self.keyFeature = keyFeature#key del data set, solo en los casos que corresponde
 
     #metodo que permite evaluar la opcion a ejecutar...
     def checkExec(self):
 
-        if self.optionProcess == 0:#show data continue
-            print "show data continue"
-
-        elif self.optionProcess == 1:#distribution data
-            print "distribucion acumulada" #esto es una imagen
-            print "histogramas"#esto es un key -> array data, por cada tipo de dato continuo
-            print "prueba de normalidad"#esto es un grafico
-            print "test de shapiro"#esto es un key -> data
-
-        elif self.optionProcess == 2:#boxplot
-
-            #instancia a objeto que tiene metodos que permiten obtener la dispersion de la data
-            dataObject = getDataByType.dataByType(self.handlerFeature)
-
-            dictDispersion = {}
-            try:
-                dictDispersion = dataObject.getValuesContinues()#obtengo la respuesta en forma de diccionario, hago una llamada a un metodo
-                dictDispersion.update({"exec": "OK"})#validacion para servidor
-                #print json.dumps(dictDispersion)
-            except:
-                dictDispersion = {"exec": "ERROR"}
-                #print json.dumps(dictDispersion)
-
-            #escribimos el archivo de respuesta
-            #create file with response...
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseDispersion"+str(self.job)+".json", 'w') as fp:
-                json.dump(dictDispersion, fp)
-
-        elif self.optionProcess == 3:#frecuence
+        if self.optionProcess == 1:#show data continue
 
             try:
-                dataObject = getDataByType.dataByType(self.handlerFeature)
-                dictDiscrete = dataObject.getValuesDiscrete()
-                dictDispersion.update({"exec": "OK"})#validacion para servidor
-                print json.dumps(dictDiscrete)
+                graphic = createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"viewContinueValuesFor_"+self.keyFeature+".png"
+                graphic.createScatterContinueData(self.dataSet[self.keyFeature], namePicture, self.keyFeature)
+                print "Create graphic OK"
             except:
-                dictResponse = {"exec": "ERROR"}
-                print json.dumps(dictDispersion)
+                print "Error during create graphic"
+                pass
 
-        elif self.optionProcess == 4:#parallel
-            print "parallel"#esto es una mezcla
+        elif self.optionProcess == 2:#boxplot and violinplot
 
-        elif self.optionProcess == 5:#sploms
-            print "sploms"#esto es una mezcla
+            try:
+                graphic = createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"boxplot.svg"
+                graphic.createBoxPlot(self.dataSet, namePicture)
+                print "Box plot graphic OK"
+            except:
+                print "Error during create BoxPlot"
+                pass
+
+            try:
+                graphic = createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"violinplot.svg"
+                graphic.createViolinPlot(self.dataSet, namePicture)
+                print "Violin plot graphic OK"
+            except:
+                print "Error during create Violin"
+                pass
+                
+        elif self.optionProcess == 3:#histograma
+
+            try:
+                graphic = createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"histogram_"+self.keyFeature+".svg"
+                title = "Histogram for feature "+self.keyFeature
+                graphic.generateHistogram(self.dataSet, self.keyFeature, namePicture, title)
+                print "create histogram for feature: ", self.keyFeature
+            except:
+                print "Error during create Histogram"
+                pass
+
+        elif self.optionProcess == 4:#frequence
+
+            try:
+                keys = list(set(self.dataSet[self.keyFeature]))
+                values = []
+                for key in keys:
+                    cont=0
+                    for i in range(len(self.dataSet[self.keyFeature])):
+                        if self.dataSet[self.keyFeature][i] == key:
+                            cont+=1
+                    values.append(cont)
+                namePicture = self.pathResponse+"piechartFor_"+self.keyFeature+".svg"
+                graphic = createCharts.graphicsCreator()
+                graphic.createPieChart(keys, values, namePicture)
+                print "Create pie chart for "+self.keyFeature
+            except:
+                print "Error during create a pie chart"
+                pass
+
+        elif self.optionProcess == 5:#parallel
+            try:
+                graphic = createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"parallel_coordinates_"+self.keyFeature+".svg"
+                title = "parallel_coordinates for "+self.keyFeature
+                graphic.createParallelCoordinates(self.dataSet, self.keyFeature, namePicture, title)
+                print "Create parallel_coordinates graphic"
+            except:
+                print "Error during create a parallel_coordinates"
+                pass
+
+        elif self.optionProcess == 6:#SPLOM
+
+            try:
+                graphic = createCharts.graphicsCreator()
+                namePicture = self.pathResponse+"splom.svg"
+                graphic.createScatterPlotMatrix(self.dataSet, namePicture, self.keyFeature)
+                print "Create SPLOM for feature ", self.keyFeature
+            except:
+                print "Error during create SPLOM"
+                pass
 
         else:
-            #instanciamos al objeto...
-            dictResponse = {}
-            statisticProcess = processStatiticsSummary.statisticsValues(self.handlerFeature)
-            #try:
-            matrixResponse = statisticProcess.getValuesContinues()
-            dictResponse.update({"exec": "OK"})
 
-            #genero el data frame con la informacion y lo procesamos
-            header = ['Feature', 'Average', 'Standar Deviation', 'Variance', 'Max Value', 'Min Value'];
+            matrixResponse = []
+            header = ["Feature", "Mean", "STD", "Variance", "Min", "Max"]
+
+            #trabajamos con las estadisticas...
+            for key in self.dataSet:
+                try:
+                    print "Process ", key
+                    row = []
+                    row.append(key)
+                    row.append(np.mean(self.dataSet[key]))
+                    row.append(np.std(self.dataSet[key]))
+                    row.append(np.var(self.dataSet[key]))
+                    row.append(min(self.dataSet[key]))
+                    row.append(max(self.dataSet[key]))
+                    matrixResponse.append(row)
+                except:
+                    pass
+
             df = pd.DataFrame(matrixResponse, columns=header)
-            nameFile = self.pathResponse+self.user+"/"+self.job+"/statisticSummary_"+self.job+".csv"
-            df.to_csv(nameFile, index=False)
-            #except:
-            #    dictResponse.update({"exec": "ERROR"})
+            df.to_csv(self.pathResponse+"summaryStatistical.csv", index=False)
 
-            with open(self.pathResponse+self.user+"/"+self.job+"/responseStatisticProcess"+str(self.job)+".json", 'w') as fp:
-                json.dump(dictResponse, fp)
+            print "Create summaryStatistical.csv file"

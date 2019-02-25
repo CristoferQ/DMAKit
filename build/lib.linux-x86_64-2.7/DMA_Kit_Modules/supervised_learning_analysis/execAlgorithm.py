@@ -101,15 +101,15 @@ class execAlgorithm(object):
             applyNormal = ScaleNormalScore.applyNormalScale(dataSetNewFreq)
             self.data = applyNormal.dataTransform
 
-        if self.optionNormalize == 2:#min max scaler
+        elif self.optionNormalize == 2:#min max scaler
             applyMinMax = ScaleMinMax.applyMinMaxScaler(dataSetNewFreq)
             self.data = applyMinMax.dataTransform
 
-        if self.optionNormalize == 3:#log scale
+        elif self.optionNormalize == 3:#log scale
             applyLog = ScaleDataSetLog.applyLogScale(dataSetNewFreq)
             self.data = applyLog.dataTransform
 
-        if self.optionNormalize == 4:#log normal scale
+        else:#log normal scale
             applyLogNormal = ScaleLogNormalScore.applyLogNormalScale(dataSetNewFreq)
             self.data = applyLogNormal.dataTransform
 
@@ -133,23 +133,23 @@ class execAlgorithm(object):
 
             #instancia al objeto...
             errorData = {}
-            #try:
-            AdaBoostObject = AdaBoost.AdaBoost(self.data, self.target, int(self.params[0]), self.params[1], self.validation)
-            if len(self.classArray)>2:
-                AdaBoostObject.trainingMethod(2)#multilabel
-            else:
-                AdaBoostObject.trainingMethod(1)#binary
-            performance = {}
-            performance.update({"accuracy":AdaBoostObject.performanceData.scoreData[3]})
-            performance.update({"recall": AdaBoostObject.performanceData.scoreData[4]})
-            performance.update({"precision": AdaBoostObject.performanceData.scoreData[5]})
-            performance.update({"f1": AdaBoostObject.performanceData.scoreData[6]})
+            try:
+                AdaBoostObject = AdaBoost.AdaBoost(self.data, self.target, int(self.params[0]), self.params[1], self.validation)
+                if len(self.classArray)>2:
+                    AdaBoostObject.trainingMethod(2)#multilabel
+                else:
+                    AdaBoostObject.trainingMethod(1)#binary
+                performance = {}
+                performance.update({"accuracy":AdaBoostObject.performanceData.scoreData[3]})
+                performance.update({"recall": AdaBoostObject.performanceData.scoreData[4]})
+                performance.update({"precision": AdaBoostObject.performanceData.scoreData[5]})
+                performance.update({"f1": AdaBoostObject.performanceData.scoreData[6]})
 
-            self.response.update({"Performance": performance})
-            errorData.update({"exec_algorithm": "OK"})
-            #except:
-            #    errorData.update({"exec_algorithm": "ERROR"})
-            #    pass
+                self.response.update({"Performance": performance})
+                errorData.update({"exec_algorithm": "OK"})
+            except:
+                errorData.update({"exec_algorithm": "ERROR"})
+                pass
 
             #trabajamos con la matriz de confusion
             try:
