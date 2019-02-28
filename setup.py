@@ -39,7 +39,7 @@ class SetupConfiguration:
             author='David Medina, Diego Inostroza, Lukas Jeldes, Cristofer Quiroz',
             author_email='david.medina@cebib.cl',
             license='Open GPL 3',
-            packages=['DMA_Kit_Modules', 'DMA_Kit_Modules.clustering_analysis', 'DMA_Kit_Modules.checks_module', 'DMA_Kit_Modules.feature_analysis', 'DMA_Kit_Modules.statistics_analysis', 'DMA_Kit_Modules.supervised_learning_analysis', 'DMA_Kit_Modules.user_module', 'DMA_Kit_Modules.dataBase_module', 'DMA_Kit_Modules.supervised_learning_predicction', 'DMA_Kit_Modules.utils', 'DMA_Kit_Modules.statistical_test', 'DMA_Kit_Modules.graphic'],)
+            packages=['DMA_Kit_Modules', 'DMA_Kit_Modules.clustering_analysis', 'DMA_Kit_Modules.checks_module', 'DMA_Kit_Modules.feature_analysis', 'DMA_Kit_Modules.statistics_analysis', 'DMA_Kit_Modules.supervised_learning_analysis', 'DMA_Kit_Modules.supervised_learning_predicction', 'DMA_Kit_Modules.utils', 'DMA_Kit_Modules.statistical_test', 'DMA_Kit_Modules.graphic'],)
 
 def main():
 
