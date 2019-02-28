@@ -15,7 +15,7 @@ la implementacion de este servicio, es mas sencilla en comparacion a la del serv
 
 from DMA_Kit_Modules.clustering_analysis import processClustering
 from DMA_Kit_Modules.clustering_analysis import evaluationClustering
-from DMA_Kit_Modules.statistics_analysis import createHistogram
+from DMA_Kit_Modules.clustering_analysis import summaryScan
 
 from DMA_Kit_Modules.utils import transformFrequence
 from DMA_Kit_Modules.utils import ScaleNormalScore
@@ -27,13 +27,10 @@ import pandas as pd
 
 class serviceClustering(object):
 
-    def __init__(self, dataSet, job, user, pathResponse, optionNormalize):
+    def __init__(self, dataSet, pathResponse, optionNormalize):
 
         self.optionNormalize = optionNormalize
         self.processDataSet(dataSet)#hacemos el preprocesamiento a los datos
-
-        self.job = job
-        self.user = user
         self.pathResponse = pathResponse
         self.applyClustering = processClustering.aplicateClustering(self.dataSet)
 
@@ -188,5 +185,11 @@ class serviceClustering(object):
         #exportamos el resultado en formato dataframe
         dataFrame = pd.DataFrame(responseProcess, columns=header, index=indexResponse)
         dataFrameLog = pd.DataFrame(logResponsesError, columns=["Message Error"], index = indexResponseError)
-        dataFrame.to_csv(self.pathResponse+self.user+"/"+self.job+"/ResponseProcess_Job_Clustering.csv")
-        dataFrameLog.to_csv(self.pathResponse+self.user+"/"+self.job+"/ResponseProcess_Job_Clustering_Error.csv")
+        dataFrame.to_csv(self.pathResponse+"ResponseProcess_Job_Clustering.csv")
+        dataFrameLog.to_csv(self.pathResponse+"ResponseProcess_Job_Clustering_Error.csv")
+
+        #generamos el resumen del proceso
+        summary = summaryScan.summaryProcessClusteringScan(dataFrame, self.pathResponse+"ResponseProcess_Job_Clustering.csv", self.pathResponse)
+        summary.createHistogram()
+        summary.createRankingFile()
+        summary.createStatisticSummary()

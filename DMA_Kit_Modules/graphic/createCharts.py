@@ -133,10 +133,19 @@ class graphicsCreator(object):
         plt.figure()
         sns.set(color_codes=True)
         sns.set(style="ticks")
-        sns_plot = sns.distplot(dataSet[key] , color="olive", label=key, kde=False, rug=True)
+
+        #obtenemos solo los valores de interes
+        dataValues = []
+        for element in dataSet[key]:
+            try:
+                dataValues.append(float(element))
+            except:
+                pass
+        sns_plot = sns.distplot(dataValues , color="olive", label=key, kde=False, rug=True)
         sns.plt.legend()
         sns.plt.title(title)
         sns_plot.figure.savefig(exportName)
+
 
     #funcion que permite crear un parallel coordinates
     def createParallelCoordinates(self, dataSet, key, namePicture, title):

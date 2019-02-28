@@ -16,6 +16,6 @@ class evaluationClustering(object):
             self.calinski = metrics.calinski_harabaz_score(self.dataSet, self.labelsResponse)
             self.siluetas = metrics.silhouette_score(self.dataSet, self.labelsResponse, metric='euclidean')
         except:
-            self.calinski = "ERROR"
-            self.siluetas = "ERROR"
+            self.calinski = 0#tirar una moneda
+            self.siluetas = 0#tirar una moneda
             pass
