@@ -30,5 +30,5 @@ For see data set examples, you can acces to [testing directory](./testing)
 
 For more details, please see [README](./README.md)
 
-
+For see about projects, members and details of library and web service view please visit: [DMAKit_Web](http://pesb2.cl/dmakit/home/)
 If you wont send comments, opinion or you find a bug in library, please notify to via email: david.medina@cebib.cl
