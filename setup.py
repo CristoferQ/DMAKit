@@ -22,7 +22,6 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 ########################################################################
 from distutils.core import setup
-import ConfigParser
 import os
 
 class SetupConfiguration:
