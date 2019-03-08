@@ -14,21 +14,27 @@ For install modules of DMAKit please check de Requeriments.
 8. Matplotlib (>=1.5).
 8. Scikit Learn, see how to install in https://scikit-learn.org/stable/install.html
 
-## Access and Install Project
+## Install Project
 
 For acces you need clone or downlad the repository, please acces to [DMAKit](https://github.com/dMedinaO/DMAKit)
 
 Acces to directory of project and as root mode in a terminal exec command:
 
+```
 python setup.py install
-
+```
 The modules will be installed in Python directory and will be feasible import it from any python script.
 
-For acces to exec scripts, please visit [bin directory](./bin)
+## Access project or mainly directories
 
-For see data set examples, you can acces to [testing directory](./testing)
+- For acces to exec scripts, please visit [bin directory](./bin)
 
-For more details, please see [README](./README.md)
+- For see data set examples, you can acces to [testing directory](./testing)
 
-For see about projects, members and details of library and web service view please visit: [DMAKit_Web](http://pesb2.cl/dmakit/home/)
+- For more details, please see [README](./README.md)
+
+- For see about projects, members and details of library and web service view please visit: [DMAKit_Web](http://pesb2.cl/dmakit/home/)
+
+## NOTES
+
 If you wont send comments, opinion or you find a bug in library, please notify to via email: david.medina@cebib.cl
