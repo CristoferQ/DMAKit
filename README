@@ -1,15 +1,14 @@
-INSTALL MODULES PYTHON
+README
 
-As root user, execute setup.py:
+Qué es y para qué sirve.
 
-python setup.py install
+Cuáles son los módulos y cuáles son las respuestas de cada uno
 
-This scripts will create all modules in dir proyect.
+Cómo es el formato del set de datos
 
-For add more modules, you create a new directories in proyect dir and add its __init__.py corresponding file.
-Add the dir in setup.py and execute the script.
+NOTAS: Esta parte la completo yo, es con respecto a los procesos de colas.
 
-For execution your need the libraries:
+Formas de Ejecución: La idea es explicar cada uno de los ejecutables, con sus parámetros y sus correspondientes descripciones (aparece cuando se ejecuta el script con -h)
 
-distutils : allow install modules
-ConfigParser: allow create and parser configs files.
+Ejemplos de uso: dejar las posibles lineas de comando para cada ejecutable de manera genérica, es decir, si es un archivo una entrada: /path_to_file/name_file, si es un
+directorio: /path_to_file/
