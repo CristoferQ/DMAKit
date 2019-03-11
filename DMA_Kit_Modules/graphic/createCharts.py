@@ -43,7 +43,7 @@ class graphicsCreator(object):
         plt.savefig(namePicture)
 
     #metodo que permite crear un grafico de barras dobles comparativas
-    def createBarChartCompare(self, values1, values2, label1, label2, xLabel, yLabel, listData, namePicture):
+    def createBarChartCompare(self, values1, values2, label1, label2, xLabel, yLabel, title, listData, namePicture):
         plt.figure()
         listData = list(set(listData))
         # set width of bar
@@ -65,27 +65,40 @@ class graphicsCreator(object):
 
         # Create legend & Show graphic
         plt.legend()
+        plt.title(title)
         plt.savefig(namePicture)
 
     #metodo que permite crear el grafico de la matriz de confusion asociada al proceso de entrenamiento de modelos
-    def createConfusionMatrixPictures(self, matrixData, listData, namePicture):
+    def createConfusionMatrixPictures(self, cm, listData, namePicture):
 
+        normalize=False
         uniqueList = list(set(listData))
-
-        #trabajamos con la data
-        dataFrame = pd.DataFrame(matrixData, index=uniqueList, columns=uniqueList)
-        #generamos la imagen
         plt.figure()
-        heatmap = sns.heatmap(dataFrame)
+        fig, ax = plt.subplots()
+        im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+        ax.figure.colorbar(im, ax=ax)
+        # We want to show all ticks...
+        ax.set(xticks=np.arange(cm.shape[1]),
+               yticks=np.arange(cm.shape[0]),
+               # ... and label them with the respective list entries
+               xticklabels=uniqueList, yticklabels=uniqueList,
+               title='Confusion Matrix',
+               ylabel='True label',
+               xlabel='Predicted label')
 
-        loc, labels = plt.xticks()
-        heatmap.set_xticklabels(labels)
-        heatmap.set_yticklabels(labels[::-1])
+        # Rotate the tick labels and set their alignment.
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+                 rotation_mode="anchor")
 
-        # Add xticks on the middle of the group bars
-        plt.xlabel("Prediction Values", fontweight='bold')
-        plt.ylabel("Reality Values", fontweight='bold')
-        plt.title("Confusion Matrix for training model")
+        # Loop over data dimensions and create text annotations.
+        fmt = '.2f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                ax.text(j, i, format(cm[i, j], fmt),
+                        ha="center", va="center",
+                        color="white" if cm[i, j] > thresh else "black")
+        fig.tight_layout()
 
         plt.savefig(namePicture)
 

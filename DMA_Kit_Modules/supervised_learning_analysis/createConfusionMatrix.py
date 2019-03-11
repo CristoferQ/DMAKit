@@ -38,14 +38,14 @@ class confusionMatrix(object):
     #metodo que permite exportar la matriz a un csv y adiciona las filas y columnas correspondientes a fiabilidad y bakanosidad
     def exportConfusionMatrix(self, matrix, dictTransform):
 
-        #calculamos la bakanosidad del modelo (en base a los valores de la primera columna)
+        #calculamos la sensitividad del modelo (en base a los valores de la primera columna)
         bakanosidad = []
         for i in range(len(matrix)):
             sumRow = sum(matrix[i])
             value = (matrix[i][i]/float(sumRow))*100
             bakanosidad.append(value)
 
-        #calculamos la fiabilidad del modelo...
+        #calculamos la especificidad del modelo...
         transpose = matrix.transpose()
         fiabilidad = []
         for i in range(len(transpose)):
@@ -66,11 +66,11 @@ class confusionMatrix(object):
                 dataInValue = (value/float(rowSum))*100
                 row.append(dataInValue)
             matrixData.append(row)
-        dictResponse = {"fiabilidad": fiabilidad, "bakanosidad":bakanosidad, "matrix":matrixData, "header": header}
+        dictResponse = {"Specificity": fiabilidad, "Sensitivity":bakanosidad, "matrix":matrixData, "header": header}
         #generamos el grafico de barras comparativas entre estas medidas
         graph = createCharts.graphicsCreator()
 
-        graph.createBarChartCompare(fiabilidad, bakanosidad, 'fiabilidad', 'bakanosidad', 'Medidas Raras', 'Percentage', self.target, self.path+"barchartCompare.png")
+        graph.createBarChartCompare(fiabilidad, bakanosidad, 'Specificity', 'Sensitivity', 'Class Response', 'Percentage', "Quality of the model", self.target, self.path+"barchartCompare.png")
 
         return dictResponse
 
