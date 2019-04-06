@@ -19,3 +19,30 @@ For execute Feature analysis module you should exec the script launcherFeatureAn
 ```
 python launcherFeatureAnalysis.py -h
 ```
+
+The output associated whit response of scripts is:
+
+```
+
+-h, --help            show this help message and exit
+-d DATASET, --dataSet DATASET
+                      full path and name to acces dataSet input process
+-o OPTION, --option OPTION
+                      Option to Normalize data set: 1. Normal Scale 2. Min
+                      Max Scaler 3. Log scale 4. Log normal scale
+-p PATHRESULT, --pathResult PATHRESULT
+                      full path for save results
+-a PROCESS, --process PROCESS
+                      Option analyze features: 1.Correlation 2.Spatial
+                      Deformation 3. PCA 4. Mutual Information 5. Kernel PCA
+                      6. Incremental PCA
+-r ATTRIBUTE, --attribute ATTRIBUTE
+                      Name attribute response in data set
+-k KIND_DATA, --Kind_data KIND_DATA
+                      Kind of dataSet: 1. CLASS 2. RESPONSE
+```
+It shows all inputs params for use Feature Analysis module.
+
+## 2. Statistical Analysis and Statistical Test
+
+Different statistical analyzes can be performed on both continuous and discrete type attributes. Distribution analysis, dispersion and frequency evaluation, as well as visualizations of continuous variables from discrete variables such as scatter plot matrix (SPLOM) and parallel coordinates are implemented. In addition, statistical tests of different interests are included. Test to evaluate the normality of the distribution of the data: Shapiro-Wilk and Kolmogorov Smirnov Tests. Test to compare two distributions: Mann Whitney Test, and tests to evaluate correlation of to distributions: Pearson Coefficient, Spearman's rank  and Kendall's tau.
