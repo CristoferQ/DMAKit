@@ -9,3 +9,13 @@ DMAKit was designed under the Object Oriented Programming paradigm, taking advan
 ## DMAKit modules
 
 DMAKit is composed of four principal modules, which allow to evaluate characteristics, to develop statistical analysis of the data, to search patterns by means of clustering algorithms and to train classification or regression models through supervised learning algorithms. In addition, it has an exploratory model tool for both types of learning, which allows to evaluate different algorithms and parameters for the same dataset and to evaluate distributions of performance measures associated with the results of the generated models.
+
+## 1. Feature Analysis
+
+The feature analysis module allows the evaluation of relations between  different attributes based on the analysis of the correlation matrix and mutual information techniques. It also implements different dimensionality reduction algorithms, based on linear models, such as Principal Component Analysis (PCA) and its variants, PCA Kernel and Incremental PCA. Additionally, it allows to evaluate the relevance of attributes in the training of supervised learning models using the Random Forest algorithm, both for classification systems and for the  prediction of continuous variables (only available for data sets with response in their features).
+
+For execute Feature analysis module you should exec the script launcherFeatureAnalysis.py, if you wont see all options this script, please exec with option -h:
+
+```
+python launcherFeatureAnalysis.py -h
+```
