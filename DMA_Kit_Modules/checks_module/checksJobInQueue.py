@@ -1,8 +1,26 @@
-'''
-clase que tiene la responsabilidad de revisar si existen jobs en cola, en caso de que existan, los ejecuta y cambia
-el estado del job a procesando, ademas... cuando el job se ejecuta se notifica via correo electronico que el job
-cambio de estado
-'''
+########################################################################
+# checksJobsInQueue.py,
+#
+# Checks jobs in queue.
+# If the jobs exists then they are executed. Job status is changed to "Processing".
+# An email is sent with the change in the job status.
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from modulesProject.dataBase_module import ConnectDataBase
 from modulesProject.dataBase_module import HandlerQuery

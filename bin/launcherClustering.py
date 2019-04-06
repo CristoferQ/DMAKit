@@ -1,8 +1,26 @@
-'''
-script que permite ejecutar el clustering el cual ha sido seleccionado via web, recibe los parametros y genera los resultados pertinentes,
-ademas trabaja con formato json para poder generar la lectura desde el javascript en el lado web y hacer la carga de los elementos de una
-manera mas sencilla
-'''
+########################################################################
+# launcherClustering.py,
+#
+# Script that allows to execute the clustering which has been selected via web, receives the parameters and generates the pertinent results,
+# also works with json format to generate the reading from the javascript on the web side and make the loading of the elements of a
+# simplest way
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from DMA_Kit_Modules.clustering_analysis import execAlgorithm
 from DMA_Kit_Modules.checks_module import checksParams
