@@ -194,4 +194,4 @@ python launcherScanPrediction.py -d DATASET -p PATHRESULT
 ```
 ## NOTES
 
-If you wont send comments, opinion or you find a bug in library, please notify to via email: david.medina@cebib.cl
+If you want send comments, opinion or you find a bug in library, please notify to via email: david.medina@cebib.cl

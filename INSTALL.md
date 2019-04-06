@@ -37,4 +37,4 @@ The modules will be installed in Python directory and will be feasible import it
 
 ## NOTES
 
-If you wont send comments, opinion or you find a bug in library, please notify to via email: david.medina@cebib.cl
+If you want send comments, opinion or you find a bug in library, please notify to via email: david.medina@cebib.cl
