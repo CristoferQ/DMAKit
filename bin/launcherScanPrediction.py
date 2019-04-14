@@ -56,6 +56,7 @@ from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 from DMA_Kit_Modules.utils import summaryScanProcess
 from DMA_Kit_Modules.utils import responseResults
+from DMA_Kit_Modules.utils import encodingFeatures
 
 #para evaluar la performance
 from DMA_Kit_Modules.supervised_learning_predicction import performanceData
@@ -102,9 +103,11 @@ if (processData.validatePath(args.pathResult) == 0):
         target = transformData.transformData
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(data)
-        dataSetNewFreq = transformDataSet.dataTransform
-
+        #transformDataSet = transformFrequence.frequenceData(data)
+        #dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(data, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
         #ahora aplicamos el procesamiento segun lo expuesto
         applyNormal = ScaleNormalScore.applyNormalScale(dataSetNewFreq)
         data = applyNormal.dataTransform

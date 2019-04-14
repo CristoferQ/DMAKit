@@ -54,6 +54,7 @@ from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 from DMA_Kit_Modules.utils import summaryScanProcess
 from DMA_Kit_Modules.utils import responseResults
+from DMA_Kit_Modules.utils import encodingFeatures
 
 #funcion que permite calcular los estadisticos de un atributo en el set de datos, asociados a las medidas de desempeno
 def estimatedStatisticPerformance(summaryObject, attribute):
@@ -106,9 +107,12 @@ if (processData.validatePath(args.pathResult) == 0):
             kindDataSet =2
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataValues)
-        dataSetNewFreq = transformDataSet.dataTransform
-
+        #transformDataSet = transformFrequence.frequenceData(dataValues)
+        #dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataValues, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
+        
         #ahora aplicamos el procesamiento segun lo expuesto
         applyNormal = ScaleNormalScore.applyNormalScale(dataSetNewFreq)
         data = applyNormal.dataTransform
