@@ -1,6 +1,24 @@
-'''
-clase que permite representar una respuesta de un algoritmo de entrenamiento con respecto a sus parametros
-'''
+########################################################################
+# responseTraining.py,
+#
+# Allows to representate an output of a training algorithms regarding its paramethers
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from sklearn.model_selection import cross_validate, cross_val_predict, cross_val_score
 from sklearn.metrics import accuracy_score, cohen_kappa_score, f1_score, precision_score, recall_score, fbeta_score, make_scorer

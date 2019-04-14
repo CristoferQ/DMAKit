@@ -40,6 +40,21 @@ class launcherStatisticalProcess(object):
         self.optionProcess = int(optionProcess)#el metodo a ejecutar...
         self.keyFeature = keyFeature#key del data set, solo en los casos que corresponde
 
+        #removemos las variables categoricas distintas al key...
+        columnsRemove = []
+        for key in self.dataSet:
+            response=0
+            for i in range(len(self.dataSet)):
+                try:
+                    values = int(self.dataSet[key][i])
+                except:
+                    response=1
+                    columnsRemove.append(key)
+                    break
+        for key in columnsRemove:
+            if key != self.keyFeature:
+                self.dataSet.drop([key], axis='columns', inplace=True)
+
     #metodo que permite evaluar la opcion a ejecutar...
     def checkExec(self):
 

@@ -35,6 +35,7 @@ from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 from DMA_Kit_Modules.graphic import createCharts
+from DMA_Kit_Modules.utils import encodingFeatures
 
 class spatialDeformation(object):
 
@@ -48,8 +49,9 @@ class spatialDeformation(object):
     def normalizeDataSet(self, dataSetOri):
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetOri)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataSetOri, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         dataSetNorm = ""
         #ahora aplicamos el procesamiento segun lo expuesto

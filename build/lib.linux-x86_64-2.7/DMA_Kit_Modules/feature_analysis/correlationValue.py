@@ -1,7 +1,24 @@
-'''
-clase con la responsabilidad de recibir un set de datos y generar la matriz de correlacion asociada
-a los elementos, si el set de datos es del tipo clase, no se trabaja con la ultima columna
-'''
+########################################################################
+# correlationValue.py,
+#
+# generate correlation matrix for a given dataset.
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 import matplotlib
 matplotlib.use('Agg')
@@ -17,6 +34,7 @@ from DMA_Kit_Modules.utils import ScaleNormalScore
 from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import encodingFeatures
 
 class correlationMatrixData(object):
 
@@ -30,8 +48,9 @@ class correlationMatrixData(object):
     def normalizeDataSet(self):
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(self.dataSet)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(self.dataSet, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         dataSetNorm = ""
         #ahora aplicamos el procesamiento segun lo expuesto

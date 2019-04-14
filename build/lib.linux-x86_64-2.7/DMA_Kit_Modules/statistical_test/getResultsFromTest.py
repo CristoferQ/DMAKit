@@ -1,9 +1,9 @@
 ########################################################################
-# executeRemote.py,
-# Script that uses the paramiko librarie for generate connection with server
-# and handler remote exec script that insert data in database
+# getResultsFromTest.py,
 #
-# Copyright (C) 2019  Cristofer Quiroz, ceql@live.cl
+# Eval results of different test associated to data values.
+#
+# Copyright (C) 2019  David Medina Ortiz david.medina@cebib.cl
 #
 #
 # This program is distributed in the hope that it will be useful,

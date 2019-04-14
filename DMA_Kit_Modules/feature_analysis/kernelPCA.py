@@ -32,6 +32,7 @@ from DMA_Kit_Modules.utils import ScaleNormalScore
 from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import encodingFeatures
 
 class kpca(object):
 
@@ -43,8 +44,11 @@ class kpca(object):
 	#metodo que permite normalizar el set de datos con respecto a la opcion entregada
 	def normalizeDataSet(self):
 		#ahora transformamos el set de datos por si existen elementos discretos...
-		transformDataSet = transformFrequence.frequenceData(self.dataSet)
-		dataSetNewFreq = transformDataSet.dataTransform
+		#transformDataSet = transformFrequence.frequenceData(self.dataSet)
+		#dataSetNewFreq = transformDataSet.dataTransform
+		encoding = encodingFeatures.encodingFeatures(self.dataSet, 20)
+		encoding.evaluEncoderKind()
+		dataSetNewFreq = encoding.dataSet
 		dataSetNorm = ""
 
 		#ahora aplicamos el procesamiento segun lo expuesto

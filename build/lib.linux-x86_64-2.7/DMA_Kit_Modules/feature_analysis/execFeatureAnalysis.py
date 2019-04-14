@@ -1,8 +1,26 @@
-'''
-clase que recibe una solicitud y genera la instancia con respecto al tipo de
-respuesta que se espera, procesa todas las opciones segun lo que solicita el usuario
-desde la opcion web. Evalua si el data set tiene clases o corresponde a algun tipo clustering o prediccion de elementos
-'''
+########################################################################
+# execFeatureAnalysis.py,
+#
+# Generate instances from requests calls.
+# Process options from users choices.
+# Checks type of dataset, can it be clustering or element prediction.
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from DMA_Kit_Modules.dataBase_module import ConnectDataBase
 from DMA_Kit_Modules.dataBase_module import HandlerQuery

@@ -1,18 +1,35 @@
-'''
-clase que permite entrenar un algoritmo de prediccion segun las caracteristicas recibidas
-
-Orden de los algoritmos
-
-1. AdaBoost
-2. Bagging
-3. DecisionTree
-4. Gradient
-5. KNN
-6. MLP
-7. NuSVR
-8. RandomForest
-9. SVR
-'''
+########################################################################
+# execModelPrediction.py,
+#
+# Allows to train a prediction algorithms according to given features Algorithms
+#
+# 1. AdaBoost
+# 2. Bagging
+# 3. DecisionTree
+# 4. Gradient
+# 5. KNN
+# 6. MLP
+# 7. NuSVR
+# 8. RandomForest
+# 9. SVR
+#
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from DMA_Kit_Modules.supervised_learning_predicction import AdaBoost
 from DMA_Kit_Modules.supervised_learning_predicction import Baggin
@@ -33,6 +50,7 @@ from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 from DMA_Kit_Modules.supervised_learning_predicction import performanceData
 from DMA_Kit_Modules.graphic import createCharts
+from DMA_Kit_Modules.utils import encodingFeatures
 
 import pandas as pd
 import json
@@ -40,7 +58,7 @@ import json
 class execAlgorithm(object):
 
     #constructor de la clase
-    def __init__(self, dataSet, pathResponse, algorithm, params, featureClass, optionNormalize):
+    def __init__(self, dataSet, pathResponse, algorithm, params, featureClass, optionNormalize, treshold):
 
         self.dataSet = dataSet
         self.pathResponse = pathResponse
@@ -48,6 +66,7 @@ class execAlgorithm(object):
         self.featureClass = featureClass
         self.optionNormalize = optionNormalize
         self.params = params#params es una lista de parametros asociados al algoritmo
+        self.treshold = treshold
         self.createDataSet()
 
         self.responseExec = {}#diccionario con la respuesta para formar el json
@@ -74,8 +93,9 @@ class execAlgorithm(object):
         self.dictTransform = transformData.dictTransform
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetNew)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataSetNew, self.treshold)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         #ahora aplicamos el procesamiento segun lo expuesto
         if self.optionNormalize == 1:#normal scale

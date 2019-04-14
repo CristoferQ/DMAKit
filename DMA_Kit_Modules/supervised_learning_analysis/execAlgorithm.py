@@ -54,6 +54,7 @@ from DMA_Kit_Modules.supervised_learning_analysis import SVM
 #importamos los metodos para generar el resto de los resultados
 from DMA_Kit_Modules.supervised_learning_analysis import createConfusionMatrix
 from DMA_Kit_Modules.supervised_learning_analysis import createLearningCurve
+from DMA_Kit_Modules.utils import encodingFeatures
 
 #metodos de la libreria utils...
 from DMA_Kit_Modules.utils import transformDataClass
@@ -69,7 +70,7 @@ import json
 class execAlgorithm(object):
 
     #constructor de la clase
-    def __init__(self, dataSet, pathResponse, algorithm, params, validation, featureClass, optionNormalize):
+    def __init__(self, dataSet, pathResponse, algorithm, params, validation, featureClass, optionNormalize, treshold):
 
         self.dataSet = dataSet
         self.pathResponse = pathResponse
@@ -78,6 +79,7 @@ class execAlgorithm(object):
         self.validation = validation#validacion del algoritmo (valor de CV)
         self.featureClass = featureClass#el nombre del atributo que es la respuesta
         self.optionNormalize = optionNormalize#tipo de normalizacion a aplicar en el set de datos
+        self.treshold = treshold#umbral para la codificacion de variables categoricas
 
         self.response = {}#diccionario con la respuesta para formar el json
         self.classArray = []#contiene el nombre de las clases
@@ -111,8 +113,10 @@ class execAlgorithm(object):
         self.classArray = list(set(self.target))
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetNew)
-        dataSetNewFreq = transformDataSet.dataTransform
+        #transformDataSet = transformFrequence.frequenceData(dataSetNew)
+        encoding = encodingFeatures.encodingFeatures(dataSetNew, self.treshold)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         #ahora aplicamos el procesamiento segun lo expuesto
         if self.optionNormalize == 1:#normal scale

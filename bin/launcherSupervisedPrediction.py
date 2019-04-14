@@ -38,6 +38,8 @@ parser.add_argument("-p", "--pathResult", help="full path for save results", req
 parser.add_argument("-r", "--responseClass", help="Name of attribute with response class", required=True)
 parser.add_argument("-a", "--algorithm", help="Algorithm to process training model: 1. AdaBoostClassifier 2. BaggingClassifier 3. BernoulliNB 4. DecisionTree 5. GaussianNB 6. GradientBoostingClassifier 7. KNeighborsClassifier 8. MLPClassifier 9. NuSVC 10. RandomForest 11. SVC (Default SVC)", required=True)
 parser.add_argument("-i", "--params", help="Params to exec algorithm, pleas add in this form: param1-param2-param3 for more detail, checks de user manual. If you add Default, it will user the Default params", default="DEFAULT")
+parser.add_argument("-u", "--treshold", help="treshold to evaluate encoding features", default="DEFAULT")
+
 args = parser.parse_args()
 
 processData = responseResults.responseProcess()#parser y checks...
@@ -53,6 +55,7 @@ if (processData.validatePath(args.pathResult) == 0):
         algorithm = int(args.algorithm)
         featureClass = args.responseClass
         params = args.params
+        treshold = args.treshold
 
         if params == "DEFAULT":
             if algorithm>9 or algorithm<=0:
@@ -62,13 +65,13 @@ if (processData.validatePath(args.pathResult) == 0):
             print paramsValues
 
             #hacemos la instancia del obeto...
-            execProcess = execModelPrediction.execAlgorithm(dataSet, pathResult, algorithm, paramsValues, featureClass, option)
+            execProcess = execModelPrediction.execAlgorithm(dataSet, pathResult, algorithm, paramsValues, featureClass, option, treshold)
             execProcess.execAlgorithmByOptions()#hacemos la ejecucion del algoritmo con respecto a la data que se entrego
         else:
             paramsValues = params.split("-")
             print paramsValues
             #hacemos la instancia del obeto...
-            execProcess = execModelPrediction.execAlgorithm(dataSet, pathResult, algorithm, paramsValues, featureClass, option)
+            execProcess = execModelPrediction.execAlgorithm(dataSet, pathResult, algorithm, paramsValues, featureClass, option, treshold)
             execProcess.execAlgorithmByOptions()#hacemos la ejecucion del algoritmo con respecto a la data que se entrego
 
     else:

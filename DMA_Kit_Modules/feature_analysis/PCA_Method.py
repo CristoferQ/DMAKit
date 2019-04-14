@@ -37,6 +37,8 @@ from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 from DMA_Kit_Modules.graphic import createCharts
+from DMA_Kit_Modules.utils import encodingFeatures
+
 
 class pca(object):
 
@@ -48,8 +50,11 @@ class pca(object):
 	#metodo que permite normalizar el set de datos con respecto a la opcion entregada
 	def normalizeDataSet(self):
 		#ahora transformamos el set de datos por si existen elementos discretos...
-		transformDataSet = transformFrequence.frequenceData(self.dataset)
-		dataSetNewFreq = transformDataSet.dataTransform
+		#transformDataSet = transformFrequence.frequenceData(self.dataset)
+		#dataSetNewFreq = transformDataSet.dataTransform
+		encoding = encodingFeatures.encodingFeatures(self.dataset, 20)
+		encoding.evaluEncoderKind()
+		dataSetNewFreq = encoding.dataSet
 		dataSetNorm = ""
 
 		#ahora aplicamos el procesamiento segun lo expuesto
@@ -173,5 +178,4 @@ class pca(object):
 			#raise e
 			okidokie = "ERROR"
 			pass
-
 		return okidokie

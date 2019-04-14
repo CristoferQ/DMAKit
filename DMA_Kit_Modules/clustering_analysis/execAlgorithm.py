@@ -42,6 +42,7 @@ from DMA_Kit_Modules.utils import ScaleNormalScore
 from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import encodingFeatures
 
 import pandas as pd
 import json
@@ -68,8 +69,9 @@ class execAlgorithm(object):
     def processDataSet(self, dataSetInput):
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetInput)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataSetInput, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         #ahora aplicamos el procesamiento segun lo expuesto
         if self.optionNormalize == 1:#normal scale

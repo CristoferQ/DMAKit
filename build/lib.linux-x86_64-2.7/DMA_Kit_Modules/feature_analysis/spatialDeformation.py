@@ -1,8 +1,27 @@
-'''
-clase con la responsabilidad de generar la deformacion espacial de los elementos y generar un ranking de la importancia
-de los atributos mediante la aplicacion de random forest default. Si el set de datos no tiene clases, se obtienen
-mediante la aplicacion de clustering y se selecciona el con mejor calinski y mejor siluetas (en ese orden)
-'''
+########################################################################
+# spatialDeformation.py,
+#
+# Generates spacial deformation of elements.
+# Generate ranking of features using random forest approach
+# If dataset has no labels, they are calculated using clustering methods, then they are chosen using calinsky and silhouette approachs.
+#
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import pandas as pd
@@ -16,6 +35,7 @@ from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 from DMA_Kit_Modules.graphic import createCharts
+from DMA_Kit_Modules.utils import encodingFeatures
 
 class spatialDeformation(object):
 
@@ -29,8 +49,9 @@ class spatialDeformation(object):
     def normalizeDataSet(self, dataSetOri):
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetOri)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataSetOri, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         dataSetNorm = ""
         #ahora aplicamos el procesamiento segun lo expuesto

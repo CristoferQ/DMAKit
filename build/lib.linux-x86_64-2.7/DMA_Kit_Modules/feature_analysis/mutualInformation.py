@@ -1,21 +1,28 @@
 # coding=utf-8
-'''
-Clase que construye una matriz de calculo MI, calculara el valor de MI normalizado
-entre 0 (independintes) a 1 (iguales).
-Recibe un set de datos en formato (carac,dato) sin tomar en cosideracion la clase
-que clasifica.
-Se calculara el numero de caracteristicas a tomar en consideracion para la consutrccion
-de una matriz resumen.
-
-Funciones:
-SingleMi: necesita de 2 array, cada uno correspondiente a 1 caracteristica con todos
-sus datos, retorna el valor de MutualInformation para dicha combinacion.
-
-
-MakeMatrix: construye una matriz completa con al informacion de MI de todas las combinaciones
-de las caracteristicas.
-Retorna: Matriz (caract x caract) con valor MI. La diagonal siempre es 1.
-'''
+########################################################################
+# mutualInformation.py,
+#
+# Execute Mutual Information feature analysis building a matrix between features.
+# Ends with values 0 (independents) or 1 (same)
+#Receives a dataset without labels of clustering.
+#
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 import matplotlib
 matplotlib.use('Agg')
@@ -33,6 +40,7 @@ from DMA_Kit_Modules.utils import ScaleNormalScore
 from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import encodingFeatures
 
 class mutualInformation(object):
 
@@ -47,8 +55,9 @@ class mutualInformation(object):
     def normalizeDataSet(self):
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(self.dataSet)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(self.dataSet, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         dataSetNorm = ""
         #ahora aplicamos el procesamiento segun lo expuesto

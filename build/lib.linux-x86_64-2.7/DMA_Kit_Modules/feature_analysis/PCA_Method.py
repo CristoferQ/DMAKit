@@ -1,13 +1,27 @@
 # coding=utf-8
-'''
-Clase qye construye un pca simple, su funcion reside en calcular un pca para un set de
-datos entregado.
-Recibe un set de datos en formato (carac, dato) sin tomar en consideracion la clase
-que clasifica.
-La clase automaticamente calculara el tamaño del set de datos asi como tambien estandarizara
-los datos en base a un zscore.
-
-'''
+########################################################################
+# PCA_Method.py,
+#
+# Execute PCA feature analysis.
+#Receives dataset without classes labels
+#
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 import numpy as np
 from scipy import stats
@@ -23,6 +37,8 @@ from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 
 from DMA_Kit_Modules.graphic import createCharts
+from DMA_Kit_Modules.utils import encodingFeatures
+
 
 class pca(object):
 
@@ -34,8 +50,11 @@ class pca(object):
 	#metodo que permite normalizar el set de datos con respecto a la opcion entregada
 	def normalizeDataSet(self):
 		#ahora transformamos el set de datos por si existen elementos discretos...
-		transformDataSet = transformFrequence.frequenceData(self.dataset)
-		dataSetNewFreq = transformDataSet.dataTransform
+		#transformDataSet = transformFrequence.frequenceData(self.dataset)
+		#dataSetNewFreq = transformDataSet.dataTransform
+		encoding = encodingFeatures.encodingFeatures(self.dataset, 20)
+		encoding.evaluEncoderKind()
+		dataSetNewFreq = encoding.dataSet
 		dataSetNorm = ""
 
 		#ahora aplicamos el procesamiento segun lo expuesto
@@ -159,5 +178,4 @@ class pca(object):
 			#raise e
 			okidokie = "ERROR"
 			pass
-
 		return okidokie

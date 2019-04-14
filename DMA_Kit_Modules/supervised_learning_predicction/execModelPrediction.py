@@ -50,6 +50,7 @@ from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
 from DMA_Kit_Modules.supervised_learning_predicction import performanceData
 from DMA_Kit_Modules.graphic import createCharts
+from DMA_Kit_Modules.utils import encodingFeatures
 
 import pandas as pd
 import json
@@ -57,7 +58,7 @@ import json
 class execAlgorithm(object):
 
     #constructor de la clase
-    def __init__(self, dataSet, pathResponse, algorithm, params, featureClass, optionNormalize):
+    def __init__(self, dataSet, pathResponse, algorithm, params, featureClass, optionNormalize, treshold):
 
         self.dataSet = dataSet
         self.pathResponse = pathResponse
@@ -65,6 +66,7 @@ class execAlgorithm(object):
         self.featureClass = featureClass
         self.optionNormalize = optionNormalize
         self.params = params#params es una lista de parametros asociados al algoritmo
+        self.treshold = treshold
         self.createDataSet()
 
         self.responseExec = {}#diccionario con la respuesta para formar el json
@@ -91,8 +93,9 @@ class execAlgorithm(object):
         self.dictTransform = transformData.dictTransform
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetNew)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataSetNew, self.treshold)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         #ahora aplicamos el procesamiento segun lo expuesto
         if self.optionNormalize == 1:#normal scale

@@ -1,21 +1,37 @@
-'''
-scrip que permite ejecutar un algoritmo de clustering, recibe los parametros y estima los valores que son necesarios,
-recibe el archivo csv y genera los archivos asociados a los resultados para la generacion de graficos y creacion del csv
-con las etiquetas generadas por el algoritmo de clustering.
-
-# NOTE: El archivo con los resultados se encontrara en formato json y contendra el error si es que existe o los valores de
-los resultados obtenidos....
-
-# NOTE: Explicacion del atributo param
-
-Param es una lista de parametros dependiente de cada algoritmo, toma los siguientes valores posibles
-
-Algoritmo   Valor param
-K_means     k
-Birch       k
-Aglomerativo [linkage, affinity, numberK]
-Otros       Void
-'''
+########################################################################
+# execAlgorithm.py,
+#
+# Execute clustering algorithms.
+# Receives a csv file and necessary parameters to works.
+# Generate files with neccesary results to generate graphics, also generates a csv file with algorithm's labels.
+#
+# NOTE: the results file is in a json file format.
+#
+# "Param" is a list with algorithms own parameters as:
+#
+# Algorithm   param value
+# K_means     k
+# Birch       k
+# Aglomerativo [linkage, affinity, numberK]
+# Otros       Void
+#
+#
+# Copyright (C) 2019  David Medina Ortiz, david.medina@cebib.cl
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+########################################################################
 
 from DMA_Kit_Modules.clustering_analysis import processClustering
 from DMA_Kit_Modules.clustering_analysis import evaluationClustering
@@ -26,6 +42,7 @@ from DMA_Kit_Modules.utils import ScaleNormalScore
 from DMA_Kit_Modules.utils import ScaleMinMax
 from DMA_Kit_Modules.utils import ScaleDataSetLog
 from DMA_Kit_Modules.utils import ScaleLogNormalScore
+from DMA_Kit_Modules.utils import encodingFeatures
 
 import pandas as pd
 import json
@@ -52,8 +69,9 @@ class execAlgorithm(object):
     def processDataSet(self, dataSetInput):
 
         #ahora transformamos el set de datos por si existen elementos discretos...
-        transformDataSet = transformFrequence.frequenceData(dataSetInput)
-        dataSetNewFreq = transformDataSet.dataTransform
+        encoding = encodingFeatures.encodingFeatures(dataSetInput, 20)
+        encoding.evaluEncoderKind()
+        dataSetNewFreq = encoding.dataSet
 
         #ahora aplicamos el procesamiento segun lo expuesto
         if self.optionNormalize == 1:#normal scale
