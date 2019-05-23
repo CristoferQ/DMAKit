@@ -228,37 +228,7 @@ if (processData.validatePath(args.pathResult) == 0):
                         except:
                             iteracionesIncorrectas+=1
                             pass
-        '''
-        #MLP
-        #activation, solver, learning_rate, hidden_layer_sizes_a,hidden_layer_sizes_b,hidden_layer_sizes_c, alpha, max_iter, shuffle
-        for activation in ['identity', 'logistic', 'tanh', 'relu']:
-            for solver in ['lbfgs', 'sgd', 'adam']:
-                for learning_rate in ['constant', 'invscaling', 'adaptive']:
-                    for hidden_layer_sizes_a in  range(1,11):
-                        for hidden_layer_sizes_b in range(1,11):
-                            for hidden_layer_sizes_c in range(1, 11):
-                                for alpha in [0.001, 0.002, 0.01, 0.02, 0.1, 0.2]:
-                                    for max_iter in [100,200,500,1000,1500]:
-                                        for shuffle in [True, False]:
-                                            try:
-                                                print "Excec MLP"
-                                                MLPObject = MLP.MLP(data, target, activation, solver, learning_rate, hidden_layer_sizes_a,hidden_layer_sizes_b,hidden_layer_sizes_c, alpha, max_iter, shuffle)
-                                                MLPObject.trainingMethod()
-
-                                                performanceValues = performanceData.performancePrediction(target, MLPObject.predicctions.tolist())
-                                                pearsonValue = performanceValues.calculatedPearson()['pearsonr']
-                                                spearmanValue = performanceValues.calculatedSpearman()['spearmanr']
-                                                kendalltauValue = performanceValues.calculatekendalltau()['kendalltau']
-
-                                                params = "activation:%s-solver:%s-learning:%s-hidden_layer_sizes:%d+%d+%d-alpha:%f-max_iter:%d-shuffle:%s" % (activation, solver, learning_rate, hidden_layer_sizes_a, hidden_layer_sizes_b, hidden_layer_sizes_c, alpha, max_iter, str(shuffle))
-                                                row = ["MLPRegressor", params, MLPObject.r_score, pearsonValue, spearmanValue, kendalltauValue]
-                                                matrixResponse.append(row)
-                                                iteracionesCorrectas+=1
-                                            except:
-                                                iteracionesIncorrectas+=1
-                                                pass
-                                            print matrixResponse
-        '''
+        
         #NuSVR
         for kernel in ['rbf', 'linear', 'poly', 'sigmoid', 'precomputed']:
             for nu in [0.01, 0.05, 0.1, 0.5]:
