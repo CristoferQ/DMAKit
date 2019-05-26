@@ -119,7 +119,7 @@ if (processData.validatePath(args.pathResult) == 0):
         #comenzamos con las ejecuciones...
 
         #AdaBoost
-        for loss in ['linear', 'squar', 'exponential']:
+        for loss in ['linear', 'square', 'exponential']:
             for n_estimators in [10,50,100,200,500,1000,1500,2000]:
                 try:
                     print "Excec AdaBoostRegressor with %s - %d" % (loss, n_estimators)
@@ -228,7 +228,7 @@ if (processData.validatePath(args.pathResult) == 0):
                         except:
                             iteracionesIncorrectas+=1
                             pass
-        
+
         #NuSVR
         for kernel in ['rbf', 'linear', 'poly', 'sigmoid', 'precomputed']:
             for nu in [0.01, 0.05, 0.1, 0.5]:
