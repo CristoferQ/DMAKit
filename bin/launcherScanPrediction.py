@@ -128,9 +128,9 @@ if (processData.validatePath(args.pathResult) == 0):
 
                     #obtenemos el restante de performance
                     performanceValues = performanceData.performancePrediction(target, AdaBoostObject.predicctions.tolist())
-                    pearsonValue = performanceValues.calculatedPearson()
-                    spearmanValue = performanceValues.calculatedSpearman()
-                    kendalltauValue = performanceValues.calculatekendalltau()
+                    pearsonValue = performanceValues.calculatedPearson()['pearsonr']
+                    spearmanValue = performanceValues.calculatedSpearman()['spearmanr']
+                    kendalltauValue = performanceValues.calculatekendalltau()['kendalltau']
 
                     params = "loss:%s-n_estimators:%d" % (loss, n_estimators)
                     row = ["AdaBoostClassifier", params, AdaBoostObject.r_score, pearsonValue, spearmanValue, kendalltauValue]
